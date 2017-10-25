@@ -1,4 +1,3 @@
-import numpy as np
 import pandas as pd
 from xgboost import XGBClassifier
 from sklearn.model_selection import train_test_split
@@ -11,25 +10,11 @@ test = pd.read_csv('./data/test.csv')
 # Process the data
 train['Sex'] = train['Sex'].map({'female': 1, 'male': 0})
 train['Embarked'] = train['Embarked'].map({'S': 0, 'C': 1, 'Q': 3})
-
-df = pd.DataFrame(train['Name'].str.split(',').tolist())
-df2 = pd.DataFrame(df[1].str.split('.').tolist())
-train['Title'] = df2[0].map({' Mr': 0, ' Mrs': 1, ' Miss': 2, ' Master': 3, ' Don': 4, ' Rev': 5, ' Dr': 6, ' Mme': 7, ' Ms': 2, ' Major': 8,
- ' Lady': 9, ' Sir': 10, ' Mlle': 11, ' Col': 12, ' Capt': 13, ' the Countess': 1, ' Jonkheer': 14})
-
 train = train.drop(['Name', 'Cabin', 'Ticket'], 1)
-
 
 test['Sex'] = test['Sex'].map({'female': 1, 'male': 0})
 test['Embarked'] = test['Embarked'].map({'S': 0, 'C': 1, 'Q': 3})
-
-tdf = pd.DataFrame(test['Name'].str.split(',').tolist())
-tdf2 = pd.DataFrame(tdf[1].str.split('.').tolist())
-test['Title'] = tdf2[0].map({' Mr': 0, ' Mrs': 1, ' Miss': 2, ' Master': 3, ' Ms': 2, ' Col': 12, ' Rev': 5, ' Dr': 6, ' Dona': 15})
-
 test = test.drop(['Name', 'Cabin', 'Ticket'], 1)
-
-# print(train.head())
 
 # Prep data for training
 y = train['Survived']
