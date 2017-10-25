@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from xgboost import XGBClassifier
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, StratifiedKFold, cross_val_score
 from sklearn.metrics import accuracy_score
 
 # Import the data
@@ -43,22 +43,11 @@ model = XGBClassifier(n_estimators = n_estimators,
                       max_delta_step = max_delta_step,
                       min_child_weight = min_child_weight
                       )
-model.fit(X_train, y_train)
 
-# Get train predicitons
-y_pred = model.predict(X_test)
-preditions = [round(val) for val in y_pred]
+# Stratified K Fold
+n_splits = 5
+folds = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=15) 
 
-accuracy = accuracy_score(y_test, preditions)
+results = cross_val_score(model, x, y, cv=folds)
 
-print(f'Acc: {accuracy*100}%')
-
-# Predict test data
-sub_pred = model.predict(test)
-
-sub_pred_r = [round(val) for val in sub_pred]
-
-# Create submission file
-sub = pd.DataFrame({'PassengerId': test['PassengerId'], 'Survived': sub_pred_r})
-
-sub.to_csv('submission.csv', index=False)
+print(f'Acc: {results.mean()*100}% ({results.std()*100}%)')
