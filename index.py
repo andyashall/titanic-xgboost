@@ -24,11 +24,11 @@ x = train.drop('Survived', 1)
 X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=.75, random_state=1001)
 
 # Variables for classifier
-n_estimators = 100
+n_estimators = 90
 learning_rate = .03
 max_depth = 4
-subsample = .8
-colsample_bytree = .8
+subsample = 1
+colsample_bytree = 1
 gamma = 0
 max_delta_step = 0
 min_child_weight = 1
