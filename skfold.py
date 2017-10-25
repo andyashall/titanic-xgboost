@@ -9,13 +9,36 @@ train = pd.read_csv('./data/train.csv')
 test = pd.read_csv('./data/test.csv')
 
 # Process the data
-train = train.drop(['Name', 'Cabin', 'Ticket'], 1)
 train['Sex'] = train['Sex'].map({'female': 1, 'male': 0})
 train['Embarked'] = train['Embarked'].map({'S': 0, 'C': 1, 'Q': 3})
 
-test = test.drop(['Name', 'Cabin', 'Ticket'], 1)
+df = pd.DataFrame(train['Name'].str.split(',').tolist())
+df2 = pd.DataFrame(df[1].str.split('.').tolist())
+train['Title'] = df2[0]
+
+labels, levels = pd.factorize(train['Title'])
+
+titles = pd.DataFrame(labels)
+
+train['Title'] = titles
+train = train.drop(['Name', 'Cabin', 'Ticket'], 1)
+
+
 test['Sex'] = test['Sex'].map({'female': 1, 'male': 0})
 test['Embarked'] = test['Embarked'].map({'S': 0, 'C': 1, 'Q': 3})
+
+tdf = pd.DataFrame(test['Name'].str.split(',').tolist())
+tdf2 = pd.DataFrame(tdf[1].str.split('.').tolist())
+test['Title'] = tdf2[0]
+
+tlabels, levels = pd.factorize(test['Title'])
+
+ttitles = pd.DataFrame(tlabels)
+
+test['Title'] = ttitles
+test = test.drop(['Name', 'Cabin', 'Ticket'], 1)
+
+# print(train.head())
 
 # Prep data for training
 y = train['Survived']
