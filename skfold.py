@@ -44,7 +44,7 @@ test = test.drop(['Name', 'Cabin', 'Ticket'], 1)
 y = train['Survived']
 x = train.drop('Survived', 1)
 
-X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=.75, random_state=1001)
+X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=.25, random_state=1001)
 
 # Prams for classifier
 n_estimators = 90
@@ -74,3 +74,16 @@ folds = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=15)
 results = cross_val_score(model, x, y, cv=folds)
 
 print(f'Acc: {results.mean()*100}% ({results.std()*100}%)')
+
+# Fit the data
+model.fit(x, y)
+
+# Predict test data
+sub_pred = model.predict(test)
+
+sub_pred_r = [round(val) for val in sub_pred]
+
+# Create submission file
+sub = pd.DataFrame({'PassengerId': test['PassengerId'], 'Survived': sub_pred_r})
+
+sub.to_csv('skfold_submission.csv', index=False)
